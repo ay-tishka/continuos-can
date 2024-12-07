@@ -36,7 +36,7 @@ We can use $`E_\psi(x_t, t)`$ for ODE solving and sampling $`x_0`$. Simply use [
 
 Intuitively, for every $`x_t`$ model should approximate weighted mean of $`x_1 - x_0`$. But it is hard problem, because need to sample a lot for accurate approximation. That is why using information about $`x_0`$ or $`x_1`$ can be useful (may be with ideas from Bridge models). It will something like using ELBO in VAE and diffusion models.
 
-Also it can be useful to use $`F_\phi`$ and $`\epsilon t`$, because it simplifies work for $`E_\psi`$ and make our process wider. 
+Also it can be useful to use $`F_\phi`$ and $`\epsilon_t`$, because it simplifies work for $`E_\psi`$ and make our process wider. 
 
 Another idea is to go into the latent space, just using prior loss and reconstruction loss, may we with GAN or WGAN ideas. May be it will fix some dimensionality problems.
 
@@ -44,15 +44,30 @@ If we have known distributions and want to create bridge, may be we can use simi
 
 ## Results:
 
-In current repository you can see $`2`$ implementations - for simple 1D case and for CIFAR10 with using $F_\phi(x_t, t)$ (without additional limits and proving of correctness). In both cases model works not so good, it is unstable and generates bad samples.
+In current repository you can see $`3`$ implementations - for simple 1D case and for CIFAR10 with using $`F_\phi(x_t, t)`$ (without additional limits and proving of correctness) and simple version with $`x_1 - x_0`$. In both cases model works not so good, it is unstable and generates bad samples.
 
 In CIFAR10 we can see many image parts similar to real images, but the quality is bad. May be we should tune parameters (because of gans problems), may be implements some ideas from discussion, but may be I am wrong somethere. But generations that are sometimes good and formulas simplicity and beauty gives me hope :)
+
+## Why it can be important
+
+We already know how to reconstruct distribution using Flow Matching (and can do it in continuos case), but it have strict restrictions, for example function must be invertible. We can use expectation maximization for sampling something that we know pdf, or in stable case VAE. To add complexity (and model control) we use HVAE and Diffusion models, and finally we can go into continuos case. 
+
+But GAN is different, it can work not with pdf, but with measures. It already works good with many samplings. But can we use something like ELBO and continuos time for that?
+
+We can try to use same road as sampling with pdf -> Diffusion. Current work is about continuos time for GANS. But there are many other questions:
+1. Can we go into latent space, and instead of using $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t)`$ just say that we can use only $`F_\phi(x, t)`$ and just use something like prior, reconstruction and diffusion losses?
+2. Can we use even $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t)`$ (can WGAN work when all distributions are not fixed)? Now we have something like a proof only for $`x_t = (1 - t) x_0 + t x_1`$;
+3. In addition to first can we use not only $`F_\phi(x_0, x_1, t)`$ but some process $`\epsilon_t`$, or things are harder?
+4. Can we use conditions on $`x`$ and others, like in ELBO? Just to more stable training ($`score`$ will get it as an input);
+5. And can we do Bridges in latent space?
+
+So, this work is about trying to use measures in generation task.
 
 ## Run:
 
 Create logs folder before running 
 
-1. CIFAR10 with $F_\phi$: `nohup python3 train_images.py --device "cuda:0" >> logs/contgan_images.txt &`
+1. CIFAR10 with $`F_\phi`$: `nohup python3 train_images.py --device "cuda:0" >> logs/contgan_images.txt &`
 1. CIFAR10 linear: `nohup python3 train_images_simple.py --device "cuda:0" >> logs/contgan_images_simple.txt &`
 3. 1D: `nohup python3 train1d.py --device "cuda:0" >> logs/contgan1d.txt &`
 
