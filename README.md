@@ -63,6 +63,8 @@ We can try to use same road as sampling with pdf -> Diffusion. Current work is a
 
 So, this work is about trying to use measures in generation task.
 
+Also in diffusion models we can add prior loss and reconstruction loss and learnable variance that is different for $`p`$ and $`q`$ and can depend on $`x`$. We can also add some condition from sampled variables.
+
 ## Run:
 
 Create logs folder before running 
