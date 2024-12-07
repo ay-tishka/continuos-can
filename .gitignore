@@ -3,3 +3,4 @@ logs
 out
 */__pycache__
 wandb
+experiments

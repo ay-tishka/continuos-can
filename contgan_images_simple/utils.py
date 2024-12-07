@@ -18,7 +18,7 @@ def count_parameters(model, return_top=False):
     return total_params, top
 
 def jvp(func, input, create_graph=True):
-    v = th.ones_like(input, requires_grad=True)
+    v = th.ones_like(input)
 
     out, grad = th.autograd.functional.jvp(func, input, v, create_graph=create_graph, strict=True)
     assert out.shape == grad.shape

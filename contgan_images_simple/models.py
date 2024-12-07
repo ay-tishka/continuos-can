@@ -42,7 +42,7 @@ class ResidualUnet(nn.Module):
         return h + self.model(x, t)
 
 class Encoder(nn.Module):
-    def __init__(self, image_shape, encoder_type):
+    def __init__(self, image_shape):
         super().__init__()
 
         assert image_shape[1] == image_shape[2]
@@ -52,63 +52,26 @@ class Encoder(nn.Module):
             in_channels = image_shape[0] * 2,
             out_channels = image_shape[0]
         )
-
-        self.encoder_type = encoder_type
     
-    def forward(self, t, x_0, eps=None):
-        if eps is None:
-            eps = th.randn_like(x_0)
-
-        if self.encoder_type == "fixed":
-            t = t.reshape(-1, 1, 1, 1)
-            assert t.requires_grad
-            return (1. - t) * x_0 + t * eps
-        
-        elif self.encoder_type == "learnable":
-            inp = th.concat([x_0, eps], dim=1)
-            shift = self.model(inp, t)
-            t = t.reshape(-1, 1, 1, 1)
-            assert t.requires_grad
-            return (1. - t) * x_0 + t * eps + (1. - t) * t * shift
-        else:
-            raise ValueError("No such encoder type.")
+    def forward(self, x_0, x_1, t):
+        t = t.reshape(-1, 1, 1, 1)
+        return (1. - t) * x_0 + t * x_1
     
-class Decoder(nn.Module):
-    def __init__(self, image_shape, decoder_type):
+class Direction(nn.Module):
+    def __init__(self, image_shape):
         super().__init__()
 
         assert image_shape[1] == image_shape[2]
         self.image_shape = image_shape
-
-        self.decoder_type = decoder_type
-        if self.decoder_type == "fixed":
-            in_channels = image_shape[0]
-        elif self.decoder_type == "noisy":
-            in_channels = image_shape[0] * 2
-        elif self.decoder_type == "double_noisy":
-            in_channels = image_shape[0] * 3
-        else:
-            raise ValueError("No such decoder type.")
         
         self.model = ResidualUnet(
             image_size = image_shape[1],
-            in_channels = in_channels,
-            out_channels = image_shape[0] * 2
+            in_channels = image_shape[0],
+            out_channels = image_shape[0]
         )
     
     def forward(self, x_t, t):
-        if self.decoder_type == "fixed":
-            inp = x_t
-        elif self.decoder_type == "noisy":
-            eps = th.randn_like(x_t)
-            inp = th.concat([x_t, eps], dim=1)
-        elif self.decoder_type == "double_noisy":
-            eps = th.randn(x_t.shape[0], x_t.shape[1] * 2, *(x_t.shape[2:]), device=x_t.device)
-            inp = th.concat([x_t, eps], dim=1)
-
-        out = self.model(inp, t)
-        out, eps_out = out[:, :-self.image_shape[0], :, :], out[:, -self.image_shape[0]:, :, :]
-        return out, eps_out
+        return self.model(x_t, t)
 
 class Score(nn.Module):
     def __init__(self, image_shape):

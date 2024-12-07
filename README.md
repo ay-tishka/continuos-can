@@ -8,7 +8,7 @@ Start definition with discrete time. First of all, define $`x_t = (1 - t) x_0 + 
 
 It can be viewed as diffusion model, but there are $`\alpha_t`$ and $`\sigma_t`$, here for simplicity $`\alpha_t = 1 - t`$ and $`\sigma_t = t`$. Using ideas from [Neural Flow Diffusion Models](https://arxiv.org/pdf/2404.12940) set $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t)`$, may be with other coefficients. Also there is opportunity to use other process to set current process: $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t, \epsilon_t)`$. Now focus on simplest case.
 
-Our task - fit model $`E_\psi(x_t, t)`$ to reconstruct $`p(x)`$, if we can sample $`x_1`$. By induction if we can reconstruct $`p(x_t)`$ with our procedure (with $`E_\psi(x_t, t)`$) than for training use sampling $`p(x_t)`$ and just learn to reconstruct $`p(x_{t-dt})`$ (by already knowing $`p(x_t)`$).
+Our task - fit model $`E_\psi(x_t, t)`$ to reconstruct $`p(x)`$. By induction if we can reconstruct $`p(x_t)`$ with our procedure (with $`E_\psi(x_t, t)`$) than for training use sampling $`p(x_t)`$ and just learn to reconstruct $`p(x_{t-dt})`$ (by already knowing $`p(x_t)`$).
 
 Start optimization with coefficients $`\lambda(t)`$. For every step use [Wasserstein GAN](https://arxiv.org/pdf/1701.07875). Our objective is $`\min\limits_{\psi} \max\limits_{\theta, \|D_\theta\|_L \le 1} \sum_{t} \lambda(t) \left[\mathbb{E}_{x_{t-dt} \sim p(x_{t-dt})} D_\theta (x_{t-dt}, t) - \mathbb{E}_{q_\psi(x_{t-dt} | x_t), p(x_t)} D_\theta (x_{t-dt}, t) \right]`$
 
@@ -44,7 +44,7 @@ If we have known distributions and want to create bridge, may be we can use simi
 
 ## Results:
 
-In current repository you can see $`2`$ implementations - for simple 1D case and for CIFAR10. In both cases model works not so good, it is unstable and generates bad samples.
+In current repository you can see $`2`$ implementations - for simple 1D case and for CIFAR10 with using $F_\phi(x_t, t)$ (without additional limits and proving of correctness). In both cases model works not so good, it is unstable and generates bad samples.
 
 In CIFAR10 we can see many image parts similar to real images, but the quality is bad. May be we should tune parameters (because of gans problems), may be implements some ideas from discussion, but may be I am wrong somethere. But generations that are sometimes good and formulas simplicity and beauty gives me hope :)
 
@@ -52,8 +52,9 @@ In CIFAR10 we can see many image parts similar to real images, but the quality i
 
 Create logs folder before running 
 
-1. CIFAR10: `nohup python3 train_images.py --device "cuda:0" >> logs/contgan_images.txt &`
-2. 1D: `nohup python3 train1d.py --device "cuda:0" >> logs/contgan1d.txt &`
+1. CIFAR10 with $F_\phi$: `nohup python3 train_images.py --device "cuda:0" >> logs/contgan_images.txt &`
+1. CIFAR10 linear: `nohup python3 train_images_simple.py --device "cuda:0" >> logs/contgan_images_simple.txt &`
+3. 1D: `nohup python3 train1d.py --device "cuda:0" >> logs/contgan1d.txt &`
 
 ## Generation examples:
 

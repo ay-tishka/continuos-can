@@ -8,11 +8,11 @@ from .models import Encoder, Decoder, Score
 from .utils import jvp
 
 class ContGAN(nn.Module):
-    def __init__(self, image_shape, decoder_type):
+    def __init__(self, image_shape, encoder_type, decoder_type):
         super().__init__()
 
         self.image_shape = image_shape
-        self.encoder = Encoder(image_shape=image_shape)
+        self.encoder = Encoder(image_shape=image_shape, encoder_type=encoder_type)
         self.decoder = Decoder(image_shape=image_shape, decoder_type=decoder_type)
         self.score = Score(image_shape=image_shape)
     
