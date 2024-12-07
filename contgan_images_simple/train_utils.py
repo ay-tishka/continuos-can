@@ -1,7 +1,6 @@
 from torchvision.utils import save_image
 import torch as th
 
-from itertools import chain
 from tqdm import tqdm
 import os
 
@@ -16,7 +15,7 @@ def train(model, device, path, run, train_loader, eval_loader, num_epoch, score_
     model.to(device)
     run.watch(model)
 
-    encoder_direction_optimizer = th.optim.AdamW(chain(model.encoder.parameters(), model.direction.parameters()), lr=1e-4, weight_decay=0.)
+    encoder_direction_optimizer = th.optim.AdamW(model.direction.parameters(), lr=1e-4, weight_decay=0.)
     score_optimizer = th.optim.AdamW(model.score.parameters(), lr=1e-4, weight_decay=0.)
 
     model.eval()

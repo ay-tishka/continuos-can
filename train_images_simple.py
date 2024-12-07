@@ -48,7 +48,6 @@ def fit(device, score_steps, dataset, checkpoint):
 
     num_params, top = count_parameters(model, return_top=True)
     print("num params:", num_params, "top:", top)
-    print("num params encoder:", count_parameters(model.encoder))
     print("num params direction:", count_parameters(model.direction))
     print("num params score:", count_parameters(model.score))
 

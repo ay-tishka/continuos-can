@@ -47,11 +47,6 @@ class Encoder(nn.Module):
 
         assert image_shape[1] == image_shape[2]
         self.image_shape = image_shape
-        self.model = ResidualUnet(
-            image_size = image_shape[1],
-            in_channels = image_shape[0] * 2,
-            out_channels = image_shape[0]
-        )
     
     def forward(self, x_0, x_1, t):
         t = t.reshape(-1, 1, 1, 1)
