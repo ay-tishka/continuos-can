@@ -42,7 +42,7 @@ Another idea is to go into the latent space, just using prior loss and reconstru
 
 If we have known distributions and want to create bridge, may be we can use similar formulas, just say that optimum is when we know weighted mean of $x_1 - x_0$ with condition on $x_t$. And calculate formulas for simple distributions. 
 
-## Results:
+## Results
 
 In current repository you can see $`3`$ implementations - for simple 1D case and for CIFAR10 with using $`F_\phi(x_t, t)`$ (without additional limits and proving of correctness) and simple version with $`x_1 - x_0`$. In both cases model works not so good, it is unstable and generates bad samples.
 
@@ -91,6 +91,9 @@ Create logs folder before running
 
 
 ![CIFAR generation example](images/cifar_6.png)
+
+
+![CIFAR generation example](images/cifar_7.png)
 
 
 ![MNIST generation example](images/mnist_1.png)
