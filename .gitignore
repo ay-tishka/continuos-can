@@ -1,0 +1,5 @@
+data
+logs
+out
+*/__pycache__
+wandb
