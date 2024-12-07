@@ -1,5 +1,7 @@
 # Continuos GAN
 
+Train continuos GAN with simple objective: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$
+
 ## Formulation
 
 ### Discrete case
@@ -26,6 +28,8 @@ Thanks to WGAN, difference between discriminators is equal to $`0`$, so use $`\l
 For defining $`\partial D_\theta (x_t, t), \|D_\theta\|_L \le 1`$ simply use other network. This network enough to have bounded norm. For that we use $`\text{out}_\text{new} = \text{out} \frac{ \text{tanh}(\|\text{out}\|_2)}{\|\text{out}\|_2}`$, where $`\text{out}= \text{score}_\theta (x_t, t)`$
 
 Final objective: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$. In case with $`F_\phi`$ use jvp here for deriving, and using $`\epsilon_t`$ is somehow harder to derive. Good step here is to use not $`E_\psi(x_t, t)`$, but $`\hat{x_0}`$ or/and $`\hat{x_1}`$. 
+
+Now we explicitly set borders for Lipschitz constant. It is better than in WGAN, where we use tricks. 
 
 ### ODE
 
@@ -60,6 +64,7 @@ We can try to use same road as sampling with pdf -> Diffusion. Current work is a
 3. In addition to first can we use not only $`F_\phi(x_0, x_1, t)`$ but some process $`\epsilon_t`$, or things are harder?
 4. Can we use conditions on $`x`$ and others, like in ELBO? Just to more stable training ($`score`$ will get it as an input);
 5. And can we do Bridges in latent space?
+6. We can also use conditions of other processes and samples. Also combinations of models, for example stack of diffusions, may be using prior and reconstruction loss we can do it in latent space for different sizes.
 
 So, this work is about trying to use measures in generation task.
 
@@ -74,6 +79,8 @@ Create logs folder before running
 3. 1D: `nohup python3 train1d.py --device "cuda:0" >> logs/contgan1d.txt &`
 
 ## Generation examples (from different models, for example for CIFAR better are last with simple objective):
+
+For cifar we use 6.3 mln params for every part. But architecture, num steps and learning params were select near random, so results can be much better.
 
 ![CIFAR generation example](images/cifar_1.png)
 
