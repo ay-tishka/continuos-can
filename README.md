@@ -46,7 +46,7 @@ If we have known distributions and want to create bridge, may be we can use simi
 
 In current repository you can see $`3`$ implementations - for simple 1D case and for CIFAR10 with using $`F_\phi(x_t, t)`$ (without additional limits and proving of correctness) and simple version with $`x_1 - x_0`$. In both cases model works not so good, it is unstable and generates bad samples.
 
-In CIFAR10 we can see many image parts similar to real images, but the quality is bad. May be we should tune parameters (because of gans problems), may be implements some ideas from discussion, but may be I am wrong somethere. But generations that are sometimes good and formulas simplicity and beauty gives me hope :)
+In CIFAR10 we can see many image parts similar to real images, but the quality is bad. May be we should tune parameters (because of gans problems), may be implements some ideas from discussion, but may be I am wrong somethere. But generations that are sometimes good and formulas simplicity and beauty gives me hope :) And also with simple objective I start to get good results, so may be problem with case with $`F_\phi`$ and we should research WGAN theory to work with both non-fixed distribution or may be problem not in that...
 
 ## Why it can be important
 
@@ -56,7 +56,7 @@ But GAN is different, it can work not with pdf, but with measures. It already wo
 
 We can try to use same road as sampling with pdf -> Diffusion. Current work is about continuos time for GANS. But there are many other questions:
 1. Can we go into latent space, and instead of using $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t)`$ just say that we can use only $`F_\phi(x, t)`$ and just use something like prior, reconstruction and diffusion losses?
-2. Can we use even $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t)`$ (can WGAN work when all distributions are not fixed)? Now we have something like a proof only for $`x_t = (1 - t) x_0 + t x_1`$;
+2. Can we use even $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t)`$ (can WGAN work when all distributions are not fixed)? Now we have something like a proof only for $`x_t = (1 - t) x_0 + t x_1`$ and may be results with $`F_\phi`$ are worse. But may be with some restrictions they will be better;
 3. In addition to first can we use not only $`F_\phi(x_0, x_1, t)`$ but some process $`\epsilon_t`$, or things are harder?
 4. Can we use conditions on $`x`$ and others, like in ELBO? Just to more stable training ($`score`$ will get it as an input);
 5. And can we do Bridges in latent space?
@@ -67,11 +67,11 @@ So, this work is about trying to use measures in generation task.
 
 Create logs folder before running 
 
-1. CIFAR10 with $`F_\phi`$: `nohup python3 train_images.py --device "cuda:0" >> logs/contgan_images.txt &`
+1. CIFAR10 with $`F_\phi`$ (additional param if linear case, but with prediction both $`x_0`$ and $`x_1`$): `nohup python3 train_images.py --device "cuda:0" >> logs/contgan_images.txt &`
 1. CIFAR10 linear: `nohup python3 train_images_simple.py --device "cuda:0" >> logs/contgan_images_simple.txt &`
 3. 1D: `nohup python3 train1d.py --device "cuda:0" >> logs/contgan1d.txt &`
 
-## Generation examples:
+## Generation examples (from different models, for example for CIFAR better are last with simple objective):
 
 ![CIFAR generation example](images/cifar_1.png)
 
@@ -80,6 +80,15 @@ Create logs folder before running
 
 
 ![CIFAR generation example](images/cifar_3.png)
+
+
+![CIFAR generation example](images/cifar_4.png)
+
+
+![CIFAR generation example](images/cifar_5.png)
+
+
+![CIFAR generation example](images/cifar_6.png)
 
 
 ![MNIST generation example](images/mnist_1.png)
