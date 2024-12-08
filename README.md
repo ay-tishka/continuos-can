@@ -1,6 +1,6 @@
 # Continuos GAN
 
-Train continuos GAN with simple objective: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$
+Train continuos GAN with simple objective: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$. Then sample from ODE using $`E_\psi(x_t, t)`$
 
 ## Formulation
 
@@ -63,8 +63,9 @@ We can try to use same road as sampling with pdf -> Diffusion. Current work is a
 2. Can we use even $`x_t = (1 - t) x_0 + t x_1 + t (1 - t) F_\phi(x_0, x_1, t)`$ (can WGAN work when all distributions are not fixed)? Now we have something like a proof only for $`x_t = (1 - t) x_0 + t x_1`$ and may be results with $`F_\phi`$ are worse. But may be with some restrictions they will be better;
 3. In addition to first can we use not only $`F_\phi(x_0, x_1, t)`$ but some process $`\epsilon_t`$, or things are harder?
 4. Can we use conditions on $`x`$ and others, like in ELBO? Just to more stable training ($`score`$ will get it as an input);
-5. And can we do Bridges in latent space?
-6. We can also use conditions of other processes and samples. Also combinations of models, for example stack of diffusions, may be using prior and reconstruction loss we can do it in latent space for different sizes.
+5. In discrete case we can try to use $`x_t`$ as a condition;
+6. And can we do Bridges in latent space?
+7. We can also use conditions of other processes and samples. Also combinations of models, for example stack of diffusions, may be using prior and reconstruction loss we can do it in latent space for different sizes.
 
 So, this work is about trying to use measures in generation task.
 
