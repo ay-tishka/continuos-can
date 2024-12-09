@@ -73,7 +73,7 @@ We can try to use same road as sampling with pdf -> Diffusion. Current work is a
 5. In discrete case we can try to use $`x_t`$ as a condition;
 6. And can we do Bridges in latent space?
 7. We can also use conditions of other processes and samples. Also combinations of models, for example stack of diffusions, may be using prior and reconstruction loss we can do it in latent space for different sizes.
-8. We can got other formulas simply using other parametrizations. For example, $`D_\theta (x_{t-dt}, t) = 0 - dt \hat{D_\theta} (\dots, t)`$ or $`D_\theta (x_{t-dt}, t) = 0 - dt \dfrac{\partial D_\theta}{\partial \dots} (\dots, t)`$ and use simple GAN objective (you can add $`x_t`$ in condition) or Neural Optimal Transport or something other;
+8. We can got other formulas simply using other parametrizations. For example, $`D_\theta (x_{t-dt}, t) = 0 - dt \hat{D_\theta} (\dots, t)`$ or $`D_\theta (x_{t-dt}, t) = 0 - dt \dfrac{\partial D_\theta}{\partial \dots} (\dots, t)`$ and use simple GAN objective (you can add $`x_t`$ in condition) or Neural Optimal Transport or something other. I think that we can get different properties using different parametrizations, and current is just one of them, may be with some restrictions.
 9. Work with $`\lambda(t)`$.
 
 So, this work is about trying to use measures in generation task.
