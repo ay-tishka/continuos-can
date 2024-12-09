@@ -39,9 +39,9 @@ We can use $`E_\psi(x_t, t)`$ for ODE solving and sampling $`x_0`$. Simply use [
 
 ### Condition on x
 
-We can add $x_0$ and $x_1$ as a conditions to \text{score}_\theta (x_t, x_0, x_1, t)$. Intuitively, we reduce not the distance to the average, but the average of all distances. But there is no proofs that it works :)
+We can add $`x_0`$ and $`x_1`$ as a conditions to $`\text{score}_\theta (x_t, x_0, x_1, t)`$. Intuitively, we reduce not the distance to the average, but the average of all distances. But there is no proofs that it works :)
 
-With contition on $x_0$ or/and $x_1$: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, x_0, x_1, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$. Then also sample from ODE using $`E_\psi(x_t, t)`$
+With contition on $`x_0`$ or/and $`x_1`$: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, x_0, x_1, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$. Then also sample from ODE using $`E_\psi(x_t, t)`$
 
 ### Discussion
 
