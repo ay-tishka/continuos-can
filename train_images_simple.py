@@ -16,16 +16,17 @@ def create_dirs(path):
 
 @click.command()
 @click.option("--device", default="cuda:0", help="Device.")
+@click.option("--score_condition", default=False, help="Condition for score.")
 @click.option("--score_steps", default=20, help="Number of score steps.")
 @click.option("--dataset", default="cifar", help="Dataset.")
 @click.option("--checkpoint", default=None, help="Checkpoint path.")
-def fit(device, score_steps, dataset, checkpoint):
-    run = wandb.init(project="contgan-images-simple", name=f"contgan-images-simple-{score_steps}-{dataset}-{checkpoint}")
+def fit(device, score_condition, score_steps, dataset, checkpoint):
+    run = wandb.init(project="contgan-images-simple", name=f"contgan-images-simple-{score_steps}-{score_condition}-{dataset}-{checkpoint}")
     run.config.device = device
     run.config.score_steps = score_steps
     run.config.dataset = dataset
 
-    path = os.path.join(f"out/contgan-images-simple-{score_steps}-{dataset}-{checkpoint}")
+    path = os.path.join(f"out/contgan-images-simple-{score_steps}-{score_condition}-{dataset}-{checkpoint}")
     if not os.path.exists(path):
         os.makedirs(path)
     create_dirs(path)
@@ -40,7 +41,8 @@ def fit(device, score_steps, dataset, checkpoint):
         raise ValueError("No such dataset.")
 
     model = ContGAN(
-        image_shape=image_shape
+        image_shape=image_shape,
+        score_condition=score_condition
     )
 
     if checkpoint is not None:

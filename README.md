@@ -2,6 +2,8 @@
 
 Train continuos GAN with simple objective: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$. Then sample from ODE using $`E_\psi(x_t, t)`$
 
+Also you can do it with contition on $x_0$ or/and $x_1$: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, x_0, x_1, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$. Then also sample from ODE using $`E_\psi(x_t, t)`$
+
 ## Formulation
 
 ### Discrete case
@@ -36,6 +38,12 @@ Now we explicitly set borders for Lipschitz constant. It is better than in WGAN,
 We can use $`E_\psi(x_t, t)`$ for ODE solving and sampling $`x_0`$. Simply use [torchdiffeq](https://github.com/rtqichen/torchdiffeq).
 
 
+### Condition on x
+
+
+We can add $x_0$ and $x_1$ as a conditions to \text{score}_\theta (x_t, x_0, x_1, t)$. Intuitively, we reduce not the distance to the average, but the average of all distances. But there is no proofs that it works :)
+
+
 ### Discussion
 
 Intuitively, for every $`x_t`$ model should approximate weighted mean of $`x_1 - x_0`$. But it is hard problem, because need to sample a lot for accurate approximation. That is why using information about $`x_0`$ or $`x_1`$ can be useful (may be with ideas from Bridge models). It will something like using ELBO in VAE and diffusion models.
@@ -66,6 +74,7 @@ We can try to use same road as sampling with pdf -> Diffusion. Current work is a
 5. In discrete case we can try to use $`x_t`$ as a condition;
 6. And can we do Bridges in latent space?
 7. We can also use conditions of other processes and samples. Also combinations of models, for example stack of diffusions, may be using prior and reconstruction loss we can do it in latent space for different sizes.
+8. We can got other formulas simply using other parametrizations. For example, $`D_\theta (x_{t-dt}, t) = 0 - dt \hat{D_\theta} (x_t, t)$ or $D_\theta (x_{t-dt}, t) = 0 - dt \dfrac{\partial D_\theta}{\partial x_t} (x_t, t)`$
 
 So, this work is about trying to use measures in generation task.
 

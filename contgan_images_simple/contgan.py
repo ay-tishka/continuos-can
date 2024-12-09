@@ -6,13 +6,13 @@ import numpy as np
 from .models import Encoder, Direction, Score
 
 class ContGAN(nn.Module):
-    def __init__(self, image_shape):
+    def __init__(self, image_shape, score_condition):
         super().__init__()
 
         self.image_shape = image_shape
         self.encoder = Encoder(image_shape=image_shape)
         self.direction = Direction(image_shape=image_shape)
-        self.score = Score(image_shape=image_shape)
+        self.score = Score(image_shape=image_shape, condition=score_condition)
     
     def encoder_direction_loss(self, x_0, x_1, t):
         self.encoder.train()
@@ -21,7 +21,7 @@ class ContGAN(nn.Module):
 
         x_t = self.encoder(x_0=x_0, x_1=x_1, t=t)
         direction = self.direction(x_t=x_t, t=t)
-        score = self.score(x_t=x_t, t=t)
+        score = self.score(x_0=x_0, x_1=x_1, x_t=x_t, t=t)
 
         return (score * (direction - (x_1 - x_0))).mean(dim=0).sum()
     
@@ -34,7 +34,7 @@ class ContGAN(nn.Module):
             x_t = self.encoder(x_0=x_0, x_1=x_1, t=t)
             direction = self.direction(x_t=x_t, t=t)
             
-        score = self.score(x_t=x_t, t=t)
+        score = self.score(x_0=x_0, x_1=x_1, x_t=x_t, t=t)
 
         return -(score * (direction - (x_1 - x_0))).mean(dim=0).sum()
     

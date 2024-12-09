@@ -69,19 +69,24 @@ class Direction(nn.Module):
         return self.model(x_t, t)
 
 class Score(nn.Module):
-    def __init__(self, image_shape):
+    def __init__(self, image_shape, condition):
         super().__init__()
 
         assert image_shape[1] == image_shape[2]
         self.image_shape = image_shape
+        self.condition = condition
         self.model = ResidualUnet(
             image_size = image_shape[1],
-            in_channels = image_shape[0],
+            in_channels = image_shape[0] * 3 if self.condition else image_shape[0],
             out_channels = image_shape[0]
         )
 
-    def forward(self, x_t, t):
-        out = self.model(x_t, t)
+    def forward(self, x_0, x_1, x_t, t):
+        if self.condition:
+            inp = th.concat([x_0, x_1, x_t], dim=1) # We can use only two of them
+        else:
+            inp = x_t
+        out = self.model(inp, t)
 
         norm = out.reshape(out.shape[0], -1).norm(p=2, dim=1).reshape(out.shape[0], 1, 1, 1)
         out = out / norm.clamp_min(1e-8) * th.tanh(norm.clamp_min(1e-8))
