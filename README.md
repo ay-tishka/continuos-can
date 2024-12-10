@@ -56,6 +56,10 @@ So as in diffusion model we learn $`\mathbb{E}_{x_0}x_0`$ with condition to $`x_
 
 But what can we do next? Can we somehow use theory of diffusion models in our case? We will try to use ELBO. We say that on every step we learns conditional gan with respect to $`x_0`$ and $`x_t`$ that learns to minimize KL-divergence like in ELBO. Or we can constrain similar theory for any f-divergence or for metric in Wassernstine GAN. Idea here is that we can simply add condition on $`x_t`$ in our current theory, because after getting derivative it will disappear. And also may be we can do something similar with condition on $`x_0`$. We can try to use diffusion process, minimize kl-divergence with f-gan and see difference. 
 
+When we did this, we got something similar: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_t} \lambda(...) \langle \text{score}_\theta (x_t, x_0, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$ without additional borders for $`\text{score}`$ (may be we will reqularize it with any norm). Next we can sample using sampling like in ddpm. 
+
+So, it is still interesting how different gans connected here and what we can do with condition on $`x_0`$, may be we can simply remove it.
+
 ### Discussion
 
 Intuitively, for every $`x_t`$ model should approximate weighted mean of $`x_1 - x_0`$. But it is hard problem, because need to sample a lot for accurate approximation. That is why using information about $`x_0`$ or $`x_1`$ can be useful (may be with ideas from Bridge models). It will something like using ELBO in VAE and diffusion models.
