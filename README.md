@@ -60,6 +60,8 @@ When we did this, we got something similar: $`\min\limits_{\psi} \max\limits_{\t
 
 So, it is still interesting how different gans connected here and what we can do with condition on $`x_0`$, may be we can simply remove it.
 
+Can we create something common theory for f-gan, wgan for different processes with and without condition on $`x_0, x_1, x_t`$, using something like elbo?
+
 ### Discussion
 
 Intuitively, for every $`x_t`$ model should approximate weighted mean of $`x_1 - x_0`$. But it is hard problem, because need to sample a lot for accurate approximation. That is why using information about $`x_0`$ or $`x_1`$ can be useful (may be with ideas from Bridge models). It will something like using ELBO in VAE and diffusion models.
