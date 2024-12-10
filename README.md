@@ -54,7 +54,7 @@ In our method, $`\mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{s
 
 So as in diffusion model we learn $`\mathbb{E}_{x_0}x_0`$ with condition to $`x_t`$. And that means that we do something similar to sampling $`q(x_{t-dt} | x_t)`$ with zero-variance, something like ode in diffusion.
 
-But what can we do next? Can we somehow use theory of diffusion models in our case? We will try to use ELBO. We say that on every step we learns conditional gan with respect to $`x_0`$ and $`x_t`$ that learns to minimize KL-divergence like in ELBO. Or we can constrain similar theory for any f-divergence or for metric in Wassernstine GAN. Idea here is that we can simply add condition on $`x_t`$ in our current theory, because after getting derivative it will disappear. And also may be we can do something similar with condition on $`x_0`$.
+But what can we do next? Can we somehow use theory of diffusion models in our case? We will try to use ELBO. We say that on every step we learns conditional gan with respect to $`x_0`$ and $`x_t`$ that learns to minimize KL-divergence like in ELBO. Or we can constrain similar theory for any f-divergence or for metric in Wassernstine GAN. Idea here is that we can simply add condition on $`x_t`$ in our current theory, because after getting derivative it will disappear. And also may be we can do something similar with condition on $`x_0`$. We can try to use diffusion process, minimize kl-divergence with f-gan and see difference. 
 
 ### Discussion
 
