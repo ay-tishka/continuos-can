@@ -43,6 +43,19 @@ We can add $`x_0`$ and $`x_1`$ as a conditions to $`\text{score}_\theta (x_t, x_
 
 With contition on $`x_0`$ or/and $`x_1`$: $`\min\limits_{\psi} \max\limits_{\theta} \mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, x_0, x_1, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$. Then also sample from ODE using $`E_\psi(x_t, t)`$
 
+
+### Connection to Diffusion models and theoretical proofs
+
+
+In diffusion models we learns to minimize $`\mathbb{E}_{x_0, \epsilon, t} \|x_0 - \hat{x}(x_t)\|^2`$. It is equivalent to minimizing $`\mathbb{E}_{t, x_t}\mathbb{E}_{x_0} \|x_0 - \hat{x}(x_t)\|^2`$. Term $`\mathbb{E}_{x_0} \|x_0 - \hat{x}(x_t)\|^2`$ differs from $`\|\mathbb{E}_{x_0} - \hat{x}(x_t)\|^2`$ only with variance of $`x_0`$ (some constant).
+But we can not use $`\|\mathbb{E}_{x_0} - \hat{x}(x_t)\|^2`$ because of calculating of $`\mathbb{E}_{x_0}`$ with fixed $`x_t`$.
+
+In our method, $`\mathbb{E}_{t \sim [0, 1], x_0, x_1} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle`$ we can rewrite as $`\mathbb{E}_{t \sim [0, 1], x_t} \mathbb{E}_{x_0} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - (x_1 - x_0)\rangle = \mathbb{E}_{t \sim [0, 1], x_t} \lambda(t) \langle \text{score}_\theta (x_t, t) , \mathbb{E}_{x_0} \left[E_\psi(x_t, t) - (x_1 - x_0) \right]\rangle = \mathbb{E}_{t \sim [0, 1], x_t} \lambda(t) \langle \text{score}_\theta (x_t, t) , E_\psi(x_t, t) - \mathbb{E}_{x_0} (x_1 - x_0) \rangle = \mathbb{E}_{t \sim [0, 1], x_t} \lambda(t) \langle \text{score}_\theta (x_t, t) , \frac{x_t - \bar{E}_\psi(x_t, t)}{t} - \mathbb{E}_{x_0} \frac{x_t - x_0}{t} \rangle = \mathbb{E}_{t \sim [0, 1], x_t} \lambda(t) \langle \text{score}_\theta (x_t, t) , \frac{\mathbb{E}_{x_0}x_0 - \bar{E}_\psi(x_t, t)}{t} \rangle`$. We simply got other coefficient over $`t`$. 
+
+So as in diffusion model we learn $`\mathbb{E}_{x_0}x_0`$ with condition to $`x_t`$. And that means that we do something similar to sampling $`q(x_{t-dt} | x_t)`$ with zero-variance, something like ode in diffusion.
+
+But what can we do next? Can we somehow use theory of diffusion models in our case? We will try to use ELBO. We say that on every step we learns conditional gan with respect to $`x_0`$ and $`x_t`$ that learns to minimize KL-divergence like in ELBO. Or we can constrain similar theory for any f-divergence or for metric in Wassernstine GAN. Idea here is that we can simply add condition on $`x_t`$ in our current theory, because after getting derivative it will disappear. And also may be we can do something similar with condition on $`x_0`$.
+
 ### Discussion
 
 Intuitively, for every $`x_t`$ model should approximate weighted mean of $`x_1 - x_0`$. But it is hard problem, because need to sample a lot for accurate approximation. That is why using information about $`x_0`$ or $`x_1`$ can be useful (may be with ideas from Bridge models). It will something like using ELBO in VAE and diffusion models.
